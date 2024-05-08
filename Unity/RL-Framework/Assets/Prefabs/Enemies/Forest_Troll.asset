@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b558fe89f005714287fc572250bc35a, type: 3}
+  m_Name: Forest_Troll
+  m_EditorClassIdentifier: 
+  Sprites:
+  - {fileID: 21300000, guid: 8a7bb03c7a3823d46afb8ee690334c27, type: 3}
+  SpeedPerFrame: 33
+  Health: 250
+  Damage: 50
+  Cost: 100
+  Reward: 25
+  BuildTime: 90
+  Type: 2
+  Element: 2
