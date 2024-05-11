@@ -1,11 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
 using Assets.Scripts.Towers;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 using Vector3 = UnityEngine.Vector3;
 
 public class Tower : MonoBehaviour
 {
+    public GameObject ProjectilePrefab;
     public TowerData Data { get; private set; }
     private int cooldownTimer;
 
@@ -24,11 +24,10 @@ public class Tower : MonoBehaviour
         Data = Instantiate(data);
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = Data.Sprite;
-        renderer.color = Color.green;
         renderer.sortingOrder = 2;
         cooldownTimer = 0;
 
-        transform.GetChild(0).transform.localScale = Vector3.one * Data.Range * 2;
+        transform.GetChild(0).transform.localScale = Vector3.one * Data.Range * 10;
     }
 
     private void ProcessFrame(FramesUpdate framesUpdate)
@@ -51,26 +50,25 @@ public class Tower : MonoBehaviour
         foreach (var hitCollider in hitColliders)
         {
             Unit enemy = hitCollider.GetComponent<Unit>();
-            if (enemy != null) 
-            {
-                TowerAttacks.TowerAttacksMap[Data.Type](hitCollider.GetComponent<Unit>(), Data.Damage, Data.Element);
-                VisualizeHitWithLineRenderer(enemy.transform.position);
-                cooldownTimer = Data.CooldownFrames;
-                break;
-            }
+            if (enemy == null) continue;
+
+            //VisualizeProjectile(enemy.transform, () => OnHitEffect(hitCollider));
+            OnHitEffect(hitCollider);
+            cooldownTimer = Data.CooldownFrames;
+            break;
         }
-    }
 
-    private void VisualizeHitWithLineRenderer(Vector3 target)
-    {
-        LineRenderer lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer == null)
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
+        void OnHitEffect(Collider2D hitCollider)
+        {
+            TowerAttacks.TowerAttacksMap[Data.Type](hitCollider.GetComponent<Unit>(), Data.Damage, Data.Element);
+        }
 
-        lineRenderer.enabled = true;
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, target);
-
-        Destroy(lineRenderer, 1);
+        void VisualizeProjectile(Transform target, Action onHit)
+        {
+            var projectileGO = Instantiate(ProjectilePrefab, transform.position, Quaternion.identity);
+            var projectile = projectileGO.GetComponent<Projectile>();
+            projectile.Initialize(target, transform.position);
+            projectile.OnHit += onHit;
+        }
     }
 }

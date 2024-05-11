@@ -1,0 +1,43 @@
+behaviors:
+  DefenderBehavior:
+    trainer_type: ppo
+    max_steps: 5e6
+    time_horizon: 64
+    summary_freq: 10000
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3e-4
+      beta: 1e-3
+      epsilon: 0.2
+      num_epoch: 3
+      learning_rate_schedule: linear
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+  AttackerBehavior:
+    trainer_type: ppo
+    max_steps: 5e6
+    time_horizon: 64
+    summary_freq: 10000
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3e-4
+      beta: 1e-3
+      epsilon: 0.2
+      num_epoch: 3
+      learning_rate_schedule: linear
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0

@@ -2,18 +2,21 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.Scripts.Units;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public GameController GameController;
     public int WaveNumber { get; private set; } = 0;
-    public Wave[] Waves;
+    public Wave[] WavesEnemies;
+    public const int Waves = 5;
+    public const int WaveMaxFrames = 60 * 30;
+    private int _waveFrames = 0;
     private const int FramesBetweenEnemies = 5;
     private int framesSinceLastSpawn = 0;
     private bool readyToSpawn = true;
-    private readonly Queue<Unit> buildQueue = new Queue<Unit>();
-    private readonly List<Unit> activeUnits = new List<Unit>();
+    public readonly Queue<Unit> BuildQueue = new();
+    public readonly List<Unit> ActiveUnits = new();
     public GameObject UnitPrefab { get; set; }
 
     void OnEnable()
@@ -28,6 +31,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void UpdateQueue(FramesUpdate framesUpdate)
     {
+        _waveFrames += framesUpdate.FrameCount;
         framesSinceLastSpawn += framesUpdate.FrameCount;
         if (!readyToSpawn && framesSinceLastSpawn >= FramesBetweenEnemies)
         {
@@ -35,25 +39,32 @@ public class EnemySpawner : MonoBehaviour
             readyToSpawn = true;
         }
 
-        if (!readyToSpawn || buildQueue.Count <= 0) return;
-        if (!(framesSinceLastSpawn >= buildQueue.Peek().Data.BuildTime)) return;
+        if (!readyToSpawn || BuildQueue.Count <= 0) return;
+        if (!(framesSinceLastSpawn >= BuildQueue.Peek().Data.BuildTime)) return;
 
-        Unit enemyToSpawn = buildQueue.Dequeue();
+        Unit enemyToSpawn = BuildQueue.Dequeue();
+        enemyToSpawn.GameController = GameController;
         enemyToSpawn.gameObject.SetActive(true);
-        activeUnits.Add(enemyToSpawn);
+        ActiveUnits.Add(enemyToSpawn);
         
         enemyToSpawn.OnDeath += HandleUnitDeath;
 
         framesSinceLastSpawn -= (int)enemyToSpawn.Data.BuildTime;
         readyToSpawn = false;
-        UpdateQueue(new FramesUpdate(0));
+        
+        if ((ActiveUnits.Count < 1 && BuildQueue.Count < 1) || _waveFrames >= WaveMaxFrames)
+        {
+            StartWave();
+        }
+
+        UpdateQueue(new(0));
     }
 
     private void HandleUnitDeath(Unit u)
     {
         OnUnitDeath(u);
-        activeUnits.Remove(u);
-        if (activeUnits.Count == 0 && buildQueue.Count == 0)
+        ActiveUnits.Remove(u);
+        if (ActiveUnits.Count == 0 && BuildQueue.Count == 0)
         {
             StartWave();
         }
@@ -61,29 +72,43 @@ public class EnemySpawner : MonoBehaviour
 
     public void QueueEnemy(UnitData unitData)
     {
-        var newEnemy = Instantiate(UnitPrefab, transform.position, Quaternion.identity);
+        var newEnemy = Instantiate(UnitPrefab, transform.position, Quaternion.identity, transform);
         newEnemy.gameObject.SetActive(false);
         var unit = newEnemy.GetComponent<Unit>();
         unit.Data = unitData;
-        buildQueue.Enqueue(unit);
+        BuildQueue.Enqueue(unit);
     }
 
     public void StartWave()
     {
-        if (WaveNumber >= Waves.Length)
+        _waveFrames = 0;
+
+        if (WaveNumber >= Waves)
         {
             GameController.GameOver(true);
             return;
         }
 
-        foreach (var unitData in Waves[WaveNumber].Units)
+        foreach (var unitData in WavesEnemies[WaveNumber].Units())
         {
             QueueEnemy(unitData);
         }
 
         WaveNumber++;
-        GameController.Instance.NextWave(WaveNumber);
+        GameController.NextWave(WaveNumber);
     }
 
     public event Action<Unit> OnUnitDeath = unit => {};
+
+    public void Reset()
+    {
+        WaveNumber = 0;
+        foreach (var unit in ActiveUnits)
+            DestroyImmediate(unit.gameObject);
+        BuildQueue.Clear();
+        ActiveUnits.Clear();
+
+        framesSinceLastSpawn = 0;
+        readyToSpawn = true;
+    }
 }

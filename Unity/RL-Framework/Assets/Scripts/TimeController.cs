@@ -9,7 +9,7 @@ public class TimeController : MonoBehaviour
 
     private const int FrameRate = 60;
     private float timePerFrame;
-    private float customTimeScale = 1.0f;
+    public float customTimeScale = 1.0f;
 
     public float CustomTimeScale
     {
@@ -30,6 +30,7 @@ public class TimeController : MonoBehaviour
         }
 
         timePerFrame = 1f / FrameRate;
+        Debug.Log($"Time per frame:{timePerFrame/customTimeScale}");
         StartCoroutine(FrameUpdater());
     }
 

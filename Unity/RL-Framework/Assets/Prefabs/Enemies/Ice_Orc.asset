@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ice_Orc
   m_EditorClassIdentifier: 
   Sprites:
-  - {fileID: 21300000, guid: 063262a1ed0803c408d413b986bdfbb4, type: 3}
+  - {fileID: 21300000, guid: 241fc97bba1802844ac6fdbb5da03428, type: 3}
   SpeedPerFrame: 75
   Health: 40
   Damage: 30

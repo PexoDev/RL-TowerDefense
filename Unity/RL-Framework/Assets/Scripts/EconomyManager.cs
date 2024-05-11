@@ -1,19 +1,30 @@
+using System;
 using UnityEngine;
 
 public class EconomyManager : MonoBehaviour
 {
-    public int Gold { get; set; }
+    private int _gold = 0;
+
+    public int Gold
+    {
+        get => _gold;
+        set
+        {
+            _gold = Mathf.Clamp(value, 0, MaxGold);
+            OnGoldUpdate(_gold);
+        }
+    }
+
+    public event Action<int> OnGoldUpdate = (gold) => { };
+    public event Action<int> OnWorkersUpdate = (workers) => { };
+
+    public const int MaxGold = 1000;
+    public const int MaxWorkers = 25;
     public const int WorkerCost = 50;
     public const int IncomePerWorker = 1;
 
-    private int numberOfWorkers;
-    private int incomePerWave = 200;
+    public int NumberOfWorkers { get; private set; }
     private int _framesSinceLastUpdate = 0;
-
-    void Start()
-    {
-        Gold = 20; // Starting Gold
-    }
 
     void OnEnable()
     {
@@ -31,16 +42,25 @@ public class EconomyManager : MonoBehaviour
         if (_framesSinceLastUpdate >= 60)
         {
             _framesSinceLastUpdate = 0;
-            Gold += numberOfWorkers * IncomePerWorker;
+            Gold += NumberOfWorkers * IncomePerWorker;
         }
     }
 
     public void BuyWorker()
     {
-        if (Gold >= WorkerCost)
+        if (Gold >= WorkerCost && NumberOfWorkers < MaxWorkers)
         {
             Gold -= WorkerCost;
-            numberOfWorkers++;
+            NumberOfWorkers++;
+            OnWorkersUpdate(NumberOfWorkers);
         }
+    }
+
+    public void Reset()
+    {
+        Gold = 100;
+        NumberOfWorkers = 0;
+        _framesSinceLastUpdate = 0;
+        OnWorkersUpdate(NumberOfWorkers);
     }
 }

@@ -18,17 +18,20 @@ namespace Assets.Scripts.Towers
 
         private static void ArcherAttack(Unit target, int damage, Element element)
         {
-            target.TakeDamage(damage, element);
+            if(target == null) return;
+                target.TakeDamage(damage, element);
         }
 
         private static void MageAttack(Unit target, int damage, Element element)
         {
-            GetEnemiesWithinExplosionRange(target, MageExplosionRange).ToList().ForEach(enemy => enemy?.TakeDamage(damage, element));
+            if (target == null) return;
+                GetEnemiesWithinExplosionRange(target, MageExplosionRange).ToList().ForEach(enemy => enemy?.TakeDamage(damage, element));
         }
 
         private static void CannonAttack(Unit target, int damage, Element element)
         {
-            target.TakeDamage(damage, element);
+            if (target == null) return;
+                target.TakeDamage(damage, element);
         }
 
         private static IEnumerable<Unit> GetEnemiesWithinExplosionRange(Unit target, float explosionRange)

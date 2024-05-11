@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9f6939714a943e40a3c5ea2de714981, type: 3}
   m_Name: Fire_Mages
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 21300000, guid: 4834ecbc5d6ee0448a7b2096010e689c, type: 3}
-  Range: 2.5
+  Sprite: {fileID: 21300000, guid: 38982a26bc7f0a94cbc9e5b13c6b80f3, type: 3}
+  Range: 3.5
   Damage: 1
-  CooldownFrames: 30
-  Cost: 25
+  CooldownFrames: 20
+  Cost: 40
   Type: 1
   Element: 0

@@ -6,14 +6,15 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
+    public GameController GameController;
     public GameObject tilePrefab;
     public Sprite pathPrefab;
     public Sprite spawnPrefab;
     public Sprite castlePrefab;
 
-    private const int mapSize = 15;
+    public const int MapSize = 15;
 
-    public MapTile[,] Map = new MapTile[mapSize, mapSize];
+    public MapTile[,] Map = new MapTile[MapSize, MapSize];
     public int seed;
 
     void Awake()
@@ -23,7 +24,6 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
-        // If a seed is not set, use a random seed
         if (seed == 0)
         {
             seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
@@ -31,17 +31,16 @@ public class MapGenerator : MonoBehaviour
         }
         else
         {
-            // Initialize the random number generator with the provided seed
             UnityEngine.Random.InitState(seed);
         }
 
-        Debug.Log($"Map Seed: {seed}"); // Print the seed to the console
+        Debug.Log($"Map Seed: {seed}"); 
 
         GenerateTiles();
         MarkBorder();
         var path = GeneratePath().ToArray();
-        GameController.Instance.Path = path;
-        GameController.Instance.Map = Map;
+        GameController.Path = path;
+        GameController.Map = Map;
         PlaceCastle(path);
         PlaceSpawn(path);
 
@@ -50,11 +49,11 @@ public class MapGenerator : MonoBehaviour
 
     private void GenerateTiles()
     {
-        for (int x = 0; x < mapSize; x++)
+        for (int x = 0; x < MapSize; x++)
         {
-            for (int y = 0; y < mapSize; y++)
+            for (int y = 0; y < MapSize; y++)
             {
-                Vector3 position = new Vector3(x, 0, y);
+                Vector3 position = new(x + transform.position.x, transform.position.y, y + transform.position.z);
                 var tile = Instantiate(tilePrefab, position, Quaternion.identity, transform);
                 tile.transform.Rotate(90, 0, 0);
                 tile.name = $"Tile[{x},{y}]";
@@ -66,11 +65,11 @@ public class MapGenerator : MonoBehaviour
 
     private void MarkBorder()
     {
-        for (int x = 0; x < mapSize; x++)
+        for (int x = 0; x < MapSize; x++)
         {
-            for (int y = 0; y < mapSize; y++)
+            for (int y = 0; y < MapSize; y++)
             {
-                if (x == 0 || y == 0 || x == mapSize - 1 || y == mapSize - 1)
+                if (x == 0 || y == 0 || x == MapSize - 1 || y == MapSize - 1)
                 {
                     Map[x, y].Type = TileType.Blocked;
                 }
@@ -80,9 +79,9 @@ public class MapGenerator : MonoBehaviour
 
     private List<MapTile> GeneratePath()
     {
-        List<MapTile> pathTiles = new List<MapTile>();
+        var pathTiles = new List<MapTile>();
 
-        int x = mapSize / 2;
+        int x = MapSize / 2;
         int y = 1;
 
         MapTile startTile = Map[x, y];
@@ -94,7 +93,7 @@ public class MapGenerator : MonoBehaviour
 
         int noValidMoveCount = 0;
 
-        while (y < mapSize - 2 && noValidMoveCount < 10)
+        while (y < MapSize - 2 && noValidMoveCount < 10)
         {
             int nextX = x, nextY = y;
 
@@ -102,7 +101,7 @@ public class MapGenerator : MonoBehaviour
             {
                 nextX += direction;
 
-                if (nextX <= 0 || nextX >= mapSize - 1)
+                if (nextX <= 0 || nextX >= MapSize - 1)
                 {
                     direction = -direction;
                     nextX = x;
@@ -123,7 +122,7 @@ public class MapGenerator : MonoBehaviour
                 currentTile.Type = TileType.Path;
                 noValidMoveCount = 0;
                 var changeDirectionChance = movingHorizontally ? 5 : 40;
-                if (y < mapSize - 1 && UnityEngine.Random.Range(0, 100) < changeDirectionChance)
+                if (y < MapSize - 1 && UnityEngine.Random.Range(0, 100) < changeDirectionChance)
                 {
                     movingHorizontally = !movingHorizontally;
                     direction = UnityEngine.Random.Range(0, 2) * 2 - 1;
@@ -149,7 +148,7 @@ public class MapGenerator : MonoBehaviour
 
     private bool IsTileValid(int x, int y, List<MapTile> pathTiles)
     {
-        if (x < 1 || x >= mapSize - 1 || y < 1 || y >= mapSize - 1)
+        if (x < 1 || x >= MapSize - 1 || y < 1 || y >= MapSize - 1)
             return false;
         if (Map[x, y].Type != TileType.Empty || pathTiles.Contains(Map[x, y]))
             return false;
@@ -162,7 +161,8 @@ public class MapGenerator : MonoBehaviour
         castleTile.Type = TileType.Castle;
         castleTile.SetSprite(castlePrefab);
         castleTile.gameObject.AddComponent<Castle>();
-        GameController.Instance.Castle = castleTile.GetComponent<Castle>();
+        castleTile.GetComponent<Castle>().GameController = GameController;
+        GameController.Castle = castleTile.GetComponent<Castle>();
     }
 
     private void PlaceSpawn(MapTile[] path)
@@ -171,6 +171,7 @@ public class MapGenerator : MonoBehaviour
         spawnTile.Type = TileType.SpawnPoint;
         spawnTile.SetSprite(spawnPrefab);
         spawnTile.gameObject.AddComponent<EnemySpawner>();
-        GameController.Instance.Spawn = spawnTile.GetComponent<EnemySpawner>();
+        spawnTile.GetComponent<EnemySpawner>().GameController = GameController;
+        GameController.Spawn = spawnTile.GetComponent<EnemySpawner>();
     }
 }

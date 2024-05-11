@@ -5,9 +5,8 @@
         Blocked = 0,
         Empty = 1,
         Path = 2,
-        PathAdjacent = 3,
-        SpawnPoint = 4,
-        Castle = 5,
-        Tower = 6
+        SpawnPoint = 3,
+        Castle = 4,
+        Tower = 5
     }
 }

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fb4da6a28a3e7b4e800070e7b2761df, type: 3}
+  m_Name: Wave_6
+  m_EditorClassIdentifier: 
+  FireGoblin: {fileID: 11400000, guid: 6d6dfa39667e2d84f98ddf7788a55175, type: 2}
+  FireOrc: {fileID: 11400000, guid: dfc5e569964ea2d47a7b714248425adc, type: 2}
+  FireTroll: {fileID: 11400000, guid: 81f1b06dd786e564f87174256c62f844, type: 2}
+  IceGoblin: {fileID: 11400000, guid: 76a38ed96ac13694685fd897bb74ea89, type: 2}
+  IceOrc: {fileID: 11400000, guid: 3ecf871a01b8d504ab706a0117f0ec20, type: 2}
+  IceTroll: {fileID: 11400000, guid: 28fc298746da56b47bb6e50c00f34c9e, type: 2}
+  ForestGoblin: {fileID: 11400000, guid: 2c9b03be7e1964b46a845a6c9a0b8130, type: 2}
+  ForestOrc: {fileID: 11400000, guid: 7f015c488c96723469ee6caf294c0453, type: 2}
+  ForestTroll: {fileID: 11400000, guid: 4d328700e7c1d574385d4a996128c282, type: 2}
+  Units: []
+  FireGoblins: 0
+  FireOrcs: 0
+  FireTrolls: 5
+  IceGoblins: 0
+  IceOrcs: 0
+  IceTrolls: 5
+  ForestGoblins: 0
+  ForestOrcs: 0
+  ForestTrolls: 5

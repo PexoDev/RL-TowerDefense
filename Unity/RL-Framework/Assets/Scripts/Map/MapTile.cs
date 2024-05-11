@@ -5,6 +5,7 @@ public class MapTile : MonoBehaviour
 {
     private SpriteRenderer _renderer;
     public TileType Type { get; set; } = TileType.Empty;
+    public Tower Tower { get; set; }
 
     void Awake()
     {
@@ -16,8 +17,13 @@ public class MapTile : MonoBehaviour
         _renderer.sprite = sprite;
     }
 
-    public void OnRaycastHit()
+    public void FillTileEncoding(ref int[] tileEncoding)
     {
-        Debug.Log($"I'm hit! {name}");
+        tileEncoding[(int)Type] = 1;
+        if (Tower != null)
+        {
+            int towerIndex = (int)Tower.Data.Type * 3 + (int)Tower.Data.Element;
+            tileEncoding[4 + towerIndex] = 1;
+        }
     }
 }

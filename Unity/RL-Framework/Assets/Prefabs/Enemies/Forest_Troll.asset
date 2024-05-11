@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Forest_Troll
   m_EditorClassIdentifier: 
   Sprites:
-  - {fileID: 21300000, guid: 8a7bb03c7a3823d46afb8ee690334c27, type: 3}
+  - {fileID: 21300000, guid: 1ee7b6c40de3ef3429baea0779ce56fa, type: 3}
   SpeedPerFrame: 33
   Health: 250
   Damage: 50

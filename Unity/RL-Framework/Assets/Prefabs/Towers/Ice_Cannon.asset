@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9f6939714a943e40a3c5ea2de714981, type: 3}
   m_Name: Ice_Cannon
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 21300000, guid: febd2cf06417dff478a3c46957a061e4, type: 3}
-  Range: 2.5
+  Sprite: {fileID: 21300000, guid: f0818a818383a544cbf1ee5f425afda2, type: 3}
+  Range: 3.5
   Damage: 100
-  CooldownFrames: 240
-  Cost: 50
+  CooldownFrames: 120
+  Cost: 100
   Type: 2
   Element: 1

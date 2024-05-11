@@ -1,0 +1,54 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1715438221",
+        "python_version": "3.9.13 (main, Oct 13 2022, 21:23:06) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\Pexo\\anaconda3\\envs\\mastersRL2\\Scripts\\mlagents-learn training_config.yaml --run-id=Train4 --env=P:\\Masters\\RL-TowerDefense\\Unity\\RL-Framework\\Builds\\RL-Framework.exe --load --resume",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.3.0+cpu",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1715438227"
+    },
+    "total": 5.3922606,
+    "count": 1,
+    "self": 0.20985560000000003,
+    "children": {
+        "run_training.setup": {
+            "total": 0.0695907,
+            "count": 1,
+            "self": 0.0695907
+        },
+        "TrainerController.start_learning": {
+            "total": 5.1128143,
+            "count": 1,
+            "self": 6.220000000034531e-05,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 4.9251204,
+                    "count": 1,
+                    "self": 4.9251204
+                },
+                "trainer_threads": {
+                    "total": 4.999999996257998e-07,
+                    "count": 1,
+                    "self": 4.999999996257998e-07
+                },
+                "TrainerController._save_models": {
+                    "total": 0.18763120000000022,
+                    "count": 1,
+                    "self": 0.013498300000001073,
+                    "children": {
+                        "RLTrainer._checkpoint": {
+                            "total": 0.17413289999999915,
+                            "count": 2,
+                            "self": 0.17413289999999915
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
