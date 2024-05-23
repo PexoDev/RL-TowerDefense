@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Ice_Archers
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 66c0c9cbd307119458aeee0f532b17c6, type: 3}
-  Range: 3.5
+  Range: 2.5
   Damage: 10
-  CooldownFrames: 40
-  Cost: 15
+  CooldownFrames: 20
+  Cost: 50
   Type: 0
   Element: 1

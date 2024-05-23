@@ -1,9 +1,12 @@
-﻿public struct FramesUpdate
+﻿namespace Assets.Scripts
 {
-    public int FrameCount { get; private set; }
-
-    public FramesUpdate(int frameCount)
+    public struct FramesUpdate
     {
-        FrameCount = frameCount;
+        public int FrameCount { get; private set; }
+
+        public FramesUpdate(int frameCount)
+        {
+            FrameCount = frameCount;
+        }
     }
 }

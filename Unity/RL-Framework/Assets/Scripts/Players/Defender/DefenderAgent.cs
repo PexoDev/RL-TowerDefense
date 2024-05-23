@@ -1,128 +1,114 @@
-﻿using Assets.Scripts;
-using Assets.Scripts.Players.Defender;
+﻿using Assets.Scripts.Map;
+using Assets.Scripts.Towers;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class DefenderAgent : Agent
+namespace Assets.Scripts.Players.Defender
 {
-    public RLDefenderController DefenderController;
-    private bool _firstWave = true;
-    private bool _gameOver = false;
-    void Start()
+    public class DefenderAgent : Agent
     {
-        TimeController.Instance.OnNextFrame += MakeDecisionRequest;
-        
-    }
+        public RLDefenderController DefenderController;
+        private bool _gameOver = false;
 
-    void OnDestroy()
-    {
-        TimeController.Instance.OnNextFrame -= MakeDecisionRequest;
-    }
-
-    private void MakeDecisionRequest(FramesUpdate obj)
-    {
-        if (DefenderController == null) return;
-        if (this.isActiveAndEnabled)
+        private void Start()
         {
-            RequestDecision();
-        }
-    }
+            TimeController.Instance.OnNextFrame += MakeDecisionRequest;
 
-    public override void OnEpisodeBegin()
-    {
-        if (!_firstWave)
+        }
+
+        private void OnDestroy()
+        {
+            TimeController.Instance.OnNextFrame -= MakeDecisionRequest;
+        }
+
+        private void MakeDecisionRequest(FramesUpdate obj)
+        {
+            if (DefenderController == null) return;
+            if (this.isActiveAndEnabled)
+            {
+                RequestDecision();
+            }
+        }
+
+        public override void OnEpisodeBegin()
+        {
             DefenderController.GameController.ResetGame();
-
-        _gameOver = false;
-        _firstWave = false;
-    }
-
-    public override void CollectObservations(VectorSensor sensor)
-    {
-        var observations = DefenderController.GameController.GetDefenderObservation();
-        
-        foreach (var o in observations.MapObservation)
-            sensor.AddObservation(o);
-
-        foreach (var o in observations.UnitsObservation)
-            sensor.AddObservation(o);
-
-        foreach (var o in observations.BuildQueueObservation)
-            sensor.AddObservation(o);
-
-        sensor.AddObservation(observations.EconomyObservation);
-        sensor.AddObservation(observations.CastleObservation);
-    }
-
-    public override void OnActionReceived(ActionBuffers actionBuffers)
-    {
-        base.OnActionReceived(actionBuffers);
-
-        int mainAction = actionBuffers.DiscreteActions[0];
-        int secondaryAction = actionBuffers.DiscreteActions[1];
-        int tertiaryAction = actionBuffers.DiscreteActions[2];
-
-        switch (mainAction)
-        {
-            case 0: // Place Tower
-                TowerData tower = DefenderController.Towers[secondaryAction];
-                MapTile placementTile = DefenderController.GetTileByIndex(tertiaryAction);
-                DefenderController.PlaceTower(tower, placementTile);
-                break;
-            case 1: // Sell Tower
-                MapTile towerTile = DefenderController.GetTileByIndex(tertiaryAction);
-                DefenderController.SellTower(towerTile);
-                AddReward(-10f);
-                break;
-            case 2: // Buy Worker
-                DefenderController.BuyWorker();
-                break;
-            case 3: // No-Op
-                break;
+            _gameOver = false;
         }
 
-        AddRewards();
-    }
-
-    private void AddRewards()
-    {
-        if(_gameOver) return;
-
-        if (DefenderController.Castle.Health < DefenderController.CastlePreviousHealth)
+        public override void CollectObservations(VectorSensor sensor)
         {
-            AddReward(-0.1f * (DefenderController.CastlePreviousHealth - DefenderController.Castle.Health) / Castle.MaxHealth);
-            DefenderController.CastlePreviousHealth = DefenderController.Castle.Health;
+            var observations = DefenderController.GetObservation();
+
+            foreach (var o in observations.MapObservation)
+                sensor.AddObservation(o);
+
+            foreach (var o in observations.UnitsObservation)
+                sensor.AddObservation(o);
+
+            foreach (var o in observations.BuildQueueObservation)
+                sensor.AddObservation(o);
+
+            sensor.AddObservation(observations.EconomyObservation);
+            sensor.AddObservation(observations.CastleObservation);
         }
 
-        if (DefenderController.WaveClearedWithoutDamage)
+        public override void OnActionReceived(ActionBuffers actionBuffers)
         {
-            AddReward(1.0f);
-            DefenderController.WaveClearedWithoutDamage = false;
+            base.OnActionReceived(actionBuffers);
+
+            int mainAction = actionBuffers.DiscreteActions[0];
+            int secondaryAction = actionBuffers.DiscreteActions[1];
+            int tertiaryAction = actionBuffers.DiscreteActions[2];
+
+            switch (mainAction)
+            {
+                case 0:
+                    TowerData tower = DefenderController.Towers[secondaryAction];
+                    MapTile placementTile = DefenderController.GetTileByIndex(tertiaryAction);
+                    DefenderController.PlaceTower(tower, placementTile);
+                    break;
+                case 1:
+                    DefenderController.BuyWorker();
+                    break;
+                case 2: // No-Op
+                    break;
+            }
+
+            AddRewards();
         }
 
-        if (DefenderController.Victory)
+        private void AddRewards()
         {
-            _gameOver = true;
-            AddReward(10.0f);
-            Debug.Log("End episode - Defender Won");
-            EndEpisode();
+            if (_gameOver) return;
+
+            if (DefenderController.Victory)
+            {
+                _gameOver = true;
+                AddReward(5f);
+                AddReward(DefenderController.EconomyManager.Gold * 0.05f);
+                Debug.Log("End episode - Defender Won");
+                EndEpisode();
+            }
+            if (DefenderController.Defeat)
+            {
+                _gameOver = true;
+                AddReward(-10);
+                Debug.Log("End episode - Defender Lost");
+                EndEpisode();
+            }
+
+            if (DefenderController.UnitsKilled < 1) return;
+            AddReward(0.1f * DefenderController.UnitsKilled);
+            DefenderController.UnitsKilled = 0;
         }
 
-        if (DefenderController.Defeat)
+        public override void Heuristic(in ActionBuffers actionsOut)
         {
-            _gameOver = true;
-            AddReward(-10.0f);
-            Debug.Log("End episode - Defender Lost");
-            EndEpisode();
+            var discreteActionsOut = actionsOut.DiscreteActions;
+            discreteActionsOut[0] = 2; // Default No-Op
         }
-    }
-
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        var discreteActionsOut = actionsOut.DiscreteActions;
-        discreteActionsOut[0] = 3; // Default No-Op
     }
 }

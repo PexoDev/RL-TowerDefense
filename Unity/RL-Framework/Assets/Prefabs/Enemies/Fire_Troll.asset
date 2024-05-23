@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sprites:
   - {fileID: 21300000, guid: a55fe49144fdf714eb15242ee1b1d15d, type: 3}
-  SpeedPerFrame: 33
-  Health: 250
+  SpeedPerFrame: 60
+  Health: 150
   Damage: 50
-  Cost: 100
+  Cost: 150
   Reward: 25
   BuildTime: 90
   Type: 2

@@ -1,0 +1,65 @@
+{
+    "DefenderBehavior": {
+        "checkpoints": [
+            {
+                "steps": 6999967,
+                "file_path": "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-6999967.onnx",
+                "reward": 53.5,
+                "creation_time": 1715823018.7679212,
+                "auxillary_file_paths": [
+                    "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-6999967.pt"
+                ]
+            },
+            {
+                "steps": 7999975,
+                "file_path": "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-7999975.onnx",
+                "reward": 53.5,
+                "creation_time": 1715824272.305065,
+                "auxillary_file_paths": [
+                    "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-7999975.pt"
+                ]
+            },
+            {
+                "steps": 8999983,
+                "file_path": "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-8999983.onnx",
+                "reward": 53.5,
+                "creation_time": 1715825529.9277515,
+                "auxillary_file_paths": [
+                    "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-8999983.pt"
+                ]
+            },
+            {
+                "steps": 9999983,
+                "file_path": "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-9999983.onnx",
+                "reward": 53.5,
+                "creation_time": 1715826788.4613419,
+                "auxillary_file_paths": [
+                    "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-9999983.pt"
+                ]
+            },
+            {
+                "steps": 10000047,
+                "file_path": "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-10000047.onnx",
+                "reward": 53.5,
+                "creation_time": 1715826788.5184696,
+                "auxillary_file_paths": [
+                    "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-10000047.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 10000047,
+            "file_path": "results\\Experiment_6\\DefenderBehavior.onnx",
+            "reward": 53.5,
+            "creation_time": 1715826788.5184696,
+            "auxillary_file_paths": [
+                "results\\Experiment_6\\DefenderBehavior\\DefenderBehavior-10000047.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cpu"
+    }
+}

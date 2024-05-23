@@ -1,0 +1,65 @@
+{
+    "AttackerBehavior": {
+        "checkpoints": [
+            {
+                "steps": 6999964,
+                "file_path": "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-6999964.onnx",
+                "reward": 1.4585713659014021,
+                "creation_time": 1715825020.0207143,
+                "auxillary_file_paths": [
+                    "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-6999964.pt"
+                ]
+            },
+            {
+                "steps": 7999967,
+                "file_path": "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-7999967.onnx",
+                "reward": -5.0,
+                "creation_time": 1715826290.7952201,
+                "auxillary_file_paths": [
+                    "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-7999967.pt"
+                ]
+            },
+            {
+                "steps": 8999977,
+                "file_path": "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-8999977.onnx",
+                "reward": -0.16357135772705078,
+                "creation_time": 1715827533.7011683,
+                "auxillary_file_paths": [
+                    "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-8999977.pt"
+                ]
+            },
+            {
+                "steps": 9999985,
+                "file_path": "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-9999985.onnx",
+                "reward": -0.14499998092651367,
+                "creation_time": 1715828764.8497474,
+                "auxillary_file_paths": [
+                    "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-9999985.pt"
+                ]
+            },
+            {
+                "steps": 10000049,
+                "file_path": "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-10000049.onnx",
+                "reward": -0.14499998092651367,
+                "creation_time": 1715828764.8942919,
+                "auxillary_file_paths": [
+                    "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-10000049.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 10000049,
+            "file_path": "results\\Experiment_2\\AttackerBehavior.onnx",
+            "reward": -0.14499998092651367,
+            "creation_time": 1715828764.8942919,
+            "auxillary_file_paths": [
+                "results\\Experiment_2\\AttackerBehavior\\AttackerBehavior-10000049.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cpu"
+    }
+}

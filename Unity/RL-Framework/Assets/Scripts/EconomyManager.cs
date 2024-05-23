@@ -1,66 +1,69 @@
 using System;
 using UnityEngine;
 
-public class EconomyManager : MonoBehaviour
+namespace Assets.Scripts
 {
-    private int _gold = 0;
-
-    public int Gold
+    public class EconomyManager : MonoBehaviour
     {
-        get => _gold;
-        set
+        private int _gold = 0;
+
+        public int Gold
         {
-            _gold = Mathf.Clamp(value, 0, MaxGold);
-            OnGoldUpdate(_gold);
+            get => _gold;
+            set
+            {
+                _gold = Mathf.Clamp(value, 0, MaxGold);
+                OnGoldUpdate(_gold);
+            }
         }
-    }
 
-    public event Action<int> OnGoldUpdate = (gold) => { };
-    public event Action<int> OnWorkersUpdate = (workers) => { };
+        public event Action<int> OnGoldUpdate = (gold) => { };
+        public event Action<int> OnWorkersUpdate = (workers) => { };
 
-    public const int MaxGold = 1000;
-    public const int MaxWorkers = 25;
-    public const int WorkerCost = 50;
-    public const int IncomePerWorker = 1;
+        public const int MaxGold = 1000;
+        public const int MaxWorkers = 25;
+        public const int WorkerCost = 50;
+        public const int IncomePerWorker = 1;
 
-    public int NumberOfWorkers { get; private set; }
-    private int _framesSinceLastUpdate = 0;
+        public int NumberOfWorkers { get; private set; }
+        private int _framesSinceLastUpdate = 0;
 
-    void OnEnable()
-    {
-        TimeController.Instance.OnNextFrame += ProcessFrame;
-    }
-
-    void OnDisable()
-    {
-        TimeController.Instance.OnNextFrame -= ProcessFrame;
-    }
-
-    private void ProcessFrame(FramesUpdate obj)
-    {
-        _framesSinceLastUpdate += obj.FrameCount;
-        if (_framesSinceLastUpdate >= 60)
+        private void OnEnable()
         {
+            TimeController.Instance.OnNextFrame += ProcessFrame;
+        }
+
+        private void OnDisable()
+        {
+            TimeController.Instance.OnNextFrame -= ProcessFrame;
+        }
+
+        private void ProcessFrame(FramesUpdate obj)
+        {
+            _framesSinceLastUpdate += obj.FrameCount;
+            if (_framesSinceLastUpdate >= 60)
+            {
+                _framesSinceLastUpdate = 0;
+                Gold += NumberOfWorkers * IncomePerWorker;
+            }
+        }
+
+        public void BuyWorker()
+        {
+            if (Gold >= WorkerCost && NumberOfWorkers < MaxWorkers)
+            {
+                Gold -= WorkerCost;
+                NumberOfWorkers++;
+                OnWorkersUpdate(NumberOfWorkers);
+            }
+        }
+
+        public void Reset()
+        {
+            Gold = 100;
+            NumberOfWorkers = 0;
             _framesSinceLastUpdate = 0;
-            Gold += NumberOfWorkers * IncomePerWorker;
-        }
-    }
-
-    public void BuyWorker()
-    {
-        if (Gold >= WorkerCost && NumberOfWorkers < MaxWorkers)
-        {
-            Gold -= WorkerCost;
-            NumberOfWorkers++;
             OnWorkersUpdate(NumberOfWorkers);
         }
-    }
-
-    public void Reset()
-    {
-        Gold = 100;
-        NumberOfWorkers = 0;
-        _framesSinceLastUpdate = 0;
-        OnWorkersUpdate(NumberOfWorkers);
     }
 }

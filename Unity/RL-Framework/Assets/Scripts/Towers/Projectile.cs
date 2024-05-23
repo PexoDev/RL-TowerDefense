@@ -5,13 +5,14 @@ namespace Assets.Scripts.Towers
 {
     public class Projectile : MonoBehaviour
     {
-        public int FramesBeforeHit = 30;
+        public int AnimationLengthInFrames = 15;
         public event Action OnHit = () => { };
 
-        private Transform _target;
+        private bool _enabled;
         private int _framesPassed;
         private Vector3 _startingPosition;
-        private bool _enabled = false;
+        private Transform _target;
+
         public void Initialize(Transform target, Vector3 start)
         {
             _target = target;
@@ -32,9 +33,10 @@ namespace Assets.Scripts.Towers
             }
 
             _framesPassed += framesUpdate.FrameCount;
-            transform.position = Vector3.Lerp(_startingPosition, _target.position, _framesPassed/(FramesBeforeHit*1f));
-            transform.Rotate(Vector3.forward, 1f);    
-            if (_framesPassed >= FramesBeforeHit)
+            transform.position = Vector3.Lerp(_startingPosition, _target.position, _framesPassed / (AnimationLengthInFrames * 1f));
+            transform.Rotate(Vector3.forward, 1f);
+
+            if (_framesPassed >= AnimationLengthInFrames)
             {
                 OnHit();
                 TimeController.Instance.OnNextFrame -= MoveTowardsTarget;

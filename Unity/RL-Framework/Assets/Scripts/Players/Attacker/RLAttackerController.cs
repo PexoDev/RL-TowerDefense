@@ -1,16 +1,23 @@
-﻿namespace Assets.Scripts.Players.Attacker
+﻿using Assets.Scripts.Units;
+
+namespace Assets.Scripts.Players.Attacker
 {
     public class RLAttackerController : IAttackerController
     {
         public GameController GameController { get; set; }
-        public UnitData[] Units { get; set; }
-        public EconomyManager EconomyManager { get; set; }
         public EnemySpawner EnemySpawner { get; set; }
-
+        public EconomyManager EconomyManager { get; set; }
         public Castle Castle { get; set; }
+        public UnitData[] Units { get; set; }
+
         public int CastlePreviousHealth { get; set; }
         public int CastleHealthOnStartOfTheWave { get; set; }
+
         public bool WaveClearedWithoutDamage { get; set; }
+        public int WaveClearTime { get; set; } = -1;
+        public bool WaveCleared { get; set; }
+        public int WaveNumber { get; set; }
+
         public bool Victory { get; set; }
         public bool Defeat { get; set; }
 
@@ -21,14 +28,19 @@
             EconomyManager = economyManager;
             EnemySpawner = enemySpawner;
             GameController = gameController;
+
             Castle = GameController.Castle;
             CastleHealthOnStartOfTheWave = Castle.Health;
             CastlePreviousHealth = Castle.Health;
-            GameController.OnWaveEnded += () =>
+
+            GameController.OnWaveEnded += (waveIndex, waveLengthInFrames) =>
             {
                 if (Castle.Health == CastleHealthOnStartOfTheWave)
                     WaveClearedWithoutDamage = true;
                 CastleHealthOnStartOfTheWave = Castle.Health;
+                WaveClearTime += waveLengthInFrames;
+                WaveCleared = true;
+                WaveNumber = waveIndex;
             };
 
             GameController.OnGameOver += defenderWon =>
@@ -40,9 +52,10 @@
             };
         }
 
+
         public bool SpawnUnit(UnitData unitData)
         {
-            if(EconomyManager.Gold > unitData.Cost)
+            if (EconomyManager.Gold > unitData.Cost)
                 EconomyManager.Gold -= unitData.Cost;
             else
                 return false;
@@ -59,9 +72,9 @@
             return true;
         }
 
-        public AttackerObservation GetObservation()
+        public AgentObservation GetObservation()
         {
-            return GameController.GetAttackerObservation();
+            return GameController.GetEnvironmentObservation(EconomyManager);
         }
 
         public void Reset()
@@ -69,7 +82,6 @@
             Defeat = false;
             Victory = false;
             EconomyManager.Reset();
-            EnemySpawner.Reset();
         }
     }
 }

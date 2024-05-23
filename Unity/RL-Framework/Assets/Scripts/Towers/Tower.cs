@@ -1,69 +1,64 @@
-﻿using System;
-using Assets.Scripts.Towers;
+﻿using Assets.Scripts.Units;
+using System;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 
-public class Tower : MonoBehaviour
+namespace Assets.Scripts.Towers
 {
-    public GameObject ProjectilePrefab;
-    public TowerData Data { get; private set; }
-    private int cooldownTimer;
-
-    private void OnEnable()
+    public class Tower : MonoBehaviour
     {
-        TimeController.Instance.OnNextFrame += ProcessFrame;
-    }
+        public GameObject ProjectilePrefab;
+        public TowerData Data { get; private set; }
+        private int _cooldownTimer;
 
-    private void OnDisable()
-    {
-        TimeController.Instance.OnNextFrame -= ProcessFrame;
-    }
-
-    public void Initialize(TowerData data)
-    {
-        Data = Instantiate(data);
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        renderer.sprite = Data.Sprite;
-        renderer.sortingOrder = 2;
-        cooldownTimer = 0;
-
-        transform.GetChild(0).transform.localScale = Vector3.one * Data.Range * 10;
-    }
-
-    private void ProcessFrame(FramesUpdate framesUpdate)
-    {
-        cooldownTimer -= framesUpdate.FrameCount;
-        if (cooldownTimer <= 0)
+        private void OnEnable()
         {
-            PerformAttack();
+            TimeController.Instance.OnNextFrame += ProcessFrame;
         }
 
-        if (cooldownTimer <= 0)
+        private void OnDisable()
         {
-            cooldownTimer = 0;
-        }
-    }
-
-    private void PerformAttack()
-    {
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, Data.Range);
-        foreach (var hitCollider in hitColliders)
-        {
-            Unit enemy = hitCollider.GetComponent<Unit>();
-            if (enemy == null) continue;
-
-            //VisualizeProjectile(enemy.transform, () => OnHitEffect(hitCollider));
-            OnHitEffect(hitCollider);
-            cooldownTimer = Data.CooldownFrames;
-            break;
+            TimeController.Instance.OnNextFrame -= ProcessFrame;
         }
 
-        void OnHitEffect(Collider2D hitCollider)
+        public void Initialize(TowerData data)
         {
-            TowerAttacks.TowerAttacksMap[Data.Type](hitCollider.GetComponent<Unit>(), Data.Damage, Data.Element);
+            Data = Instantiate(data);
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            renderer.sprite = Data.Sprite;
+            renderer.sortingOrder = 2;
+            _cooldownTimer = 0;
         }
 
-        void VisualizeProjectile(Transform target, Action onHit)
+        private void ProcessFrame(FramesUpdate framesUpdate)
+        {
+            _cooldownTimer -= framesUpdate.FrameCount;
+            if (_cooldownTimer <= 0)
+                PerformAttack();
+        }
+
+        private void PerformAttack()
+        {
+            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, Data.Range);
+            foreach (var hitCollider in hitColliders)
+            {
+                Unit enemy = hitCollider.GetComponent<Unit>();
+                if (enemy == null) continue;
+
+                VisualizeProjectile(enemy.transform, () => OnHitEffect(hitCollider));
+                _cooldownTimer = Data.CooldownFrames;
+                break;
+            }
+        }
+
+        private void OnHitEffect(Collider2D hitCollider) => Attack(hitCollider.GetComponent<Unit>(), Data.Damage, Data.Element);
+
+        private void Attack(Unit target, int damage, Element element)
+        {
+            if (target == null) return;
+            target.TakeDamage(damage, element);
+        }
+
+        private void VisualizeProjectile(Transform target, Action onHit)
         {
             var projectileGO = Instantiate(ProjectilePrefab, transform.position, Quaternion.identity);
             var projectile = projectileGO.GetComponent<Projectile>();

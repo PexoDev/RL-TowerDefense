@@ -21,9 +21,8 @@ MonoBehaviour:
   ForestGoblin: {fileID: 11400000, guid: 2c9b03be7e1964b46a845a6c9a0b8130, type: 2}
   ForestOrc: {fileID: 11400000, guid: 7f015c488c96723469ee6caf294c0453, type: 2}
   ForestTroll: {fileID: 11400000, guid: 4d328700e7c1d574385d4a996128c282, type: 2}
-  Units: []
-  FireGoblins: 10
-  FireOrcs: 5
+  FireGoblins: 5
+  FireOrcs: 3
   FireTrolls: 1
   IceGoblins: 0
   IceOrcs: 0

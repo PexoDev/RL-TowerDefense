@@ -5,25 +5,23 @@ namespace Assets.Scripts
 {
     public class Castle : MonoBehaviour
     {
+        public event Action<int> OnCastleHit = i => { };
         public GameController GameController { get; set; }
-        public event Action<int> OnCastleHit = i => { }; 
-        private int health = 100;
+
+        public int Health => _health;
+        private int _health = MaxHealth;
+        public const int MaxHealth = 200;
+
         public void Damage(int amount)
         {
-            health -= amount;
+            if (_health <= 0) return;
+
+            _health -= amount;
             OnCastleHit(amount);
-            if (health <= 0)
+            if (_health <= 0)
             {
                 GameController.GameOver(false);
             }
-        }
-
-        public int Health => health;
-        public const int MaxHealth = 100;
-
-        public void ResetCastle()
-        {
-            health = MaxHealth;
         }
     }
 }

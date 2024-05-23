@@ -17,7 +17,7 @@ MonoBehaviour:
   SpeedPerFrame: 100
   Health: 2
   Damage: 1
-  Cost: 5
+  Cost: 2
   Reward: 1
   BuildTime: 5
   Type: 0

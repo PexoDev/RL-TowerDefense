@@ -1,29 +1,34 @@
-using Assets.Scripts.Map;
+using Assets.Scripts.Towers;
 using UnityEngine;
 
-public class MapTile : MonoBehaviour
+namespace Assets.Scripts.Map
 {
-    private SpriteRenderer _renderer;
-    public TileType Type { get; set; } = TileType.Empty;
-    public Tower Tower { get; set; }
-
-    void Awake()
+    public class MapTile : MonoBehaviour
     {
-        _renderer = GetComponent<SpriteRenderer>();
-    }
+        private SpriteRenderer _renderer;
+        public TileType Type { get; set; } = TileType.Empty;
+        public Tower Tower { get; set; }
 
-    public void SetSprite(Sprite sprite)
-    {
-        _renderer.sprite = sprite;
-    }
-
-    public void FillTileEncoding(ref int[] tileEncoding)
-    {
-        tileEncoding[(int)Type] = 1;
-        if (Tower != null)
+        private void Awake()
         {
-            int towerIndex = (int)Tower.Data.Type * 3 + (int)Tower.Data.Element;
-            tileEncoding[4 + towerIndex] = 1;
+            _renderer = GetComponent<SpriteRenderer>();
+        }
+
+        public void SetSprite(Sprite sprite)
+        {
+            _renderer.sprite = sprite;
+        }
+
+        public int GetMapEncoding()
+        {
+            int type = (int)Type;
+            int towerIndex = 0;
+            if (Tower != null)
+            {
+                towerIndex = ((int)Tower.Data.Type * 3) + (int)Tower.Data.Element;
+            }
+
+            return type + towerIndex;
         }
     }
 }

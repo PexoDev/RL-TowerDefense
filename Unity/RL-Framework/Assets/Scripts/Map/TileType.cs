@@ -7,6 +7,6 @@
         Path = 2,
         SpawnPoint = 3,
         Castle = 4,
-        Tower = 5
+        Tower = 5,
     }
 }

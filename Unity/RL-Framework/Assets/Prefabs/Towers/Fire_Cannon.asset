@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Fire_Cannon
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: 42c905784933daa4fa805f0fa7b25828, type: 3}
-  Range: 3.5
+  Range: 2.5
   Damage: 100
-  CooldownFrames: 120
+  CooldownFrames: 60
   Cost: 100
   Type: 2
   Element: 0

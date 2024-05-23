@@ -1,0 +1,123 @@
+{
+    "DefenderBehavior": {
+        "checkpoints": [
+            {
+                "steps": 6999979,
+                "file_path": "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-6999979.onnx",
+                "reward": 41.749999940395355,
+                "creation_time": 1715828662.5315192,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-6999979.pt"
+                ]
+            },
+            {
+                "steps": 7999982,
+                "file_path": "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-7999982.onnx",
+                "reward": 27.26562505029142,
+                "creation_time": 1715830094.4200983,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-7999982.pt"
+                ]
+            },
+            {
+                "steps": 8999994,
+                "file_path": "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-8999994.onnx",
+                "reward": -2.8562498004175723,
+                "creation_time": 1715831489.4667666,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-8999994.pt"
+                ]
+            },
+            {
+                "steps": 9999969,
+                "file_path": "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-9999969.onnx",
+                "reward": 3.392857654818467,
+                "creation_time": 1715832857.538017,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-9999969.pt"
+                ]
+            },
+            {
+                "steps": 10000033,
+                "file_path": "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-10000033.onnx",
+                "reward": 3.392857654818467,
+                "creation_time": 1715832857.5786674,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-10000033.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 10000033,
+            "file_path": "results\\Experiment_3\\DefenderBehavior.onnx",
+            "reward": 3.392857654818467,
+            "creation_time": 1715832857.5786674,
+            "auxillary_file_paths": [
+                "results\\Experiment_3\\DefenderBehavior\\DefenderBehavior-10000033.pt"
+            ]
+        }
+    },
+    "AttackerBehavior": {
+        "checkpoints": [
+            {
+                "steps": 6999977,
+                "file_path": "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-6999977.onnx",
+                "reward": -3.7487499713897705,
+                "creation_time": 1715828662.4392796,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-6999977.pt"
+                ]
+            },
+            {
+                "steps": 7999971,
+                "file_path": "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-7999971.onnx",
+                "reward": null,
+                "creation_time": 1715830094.731947,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-7999971.pt"
+                ]
+            },
+            {
+                "steps": 8999957,
+                "file_path": "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-8999957.onnx",
+                "reward": 5.5914285864148825,
+                "creation_time": 1715831489.5243232,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-8999957.pt"
+                ]
+            },
+            {
+                "steps": 9999997,
+                "file_path": "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-9999997.onnx",
+                "reward": 4.544000148773193,
+                "creation_time": 1715832857.132955,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-9999997.pt"
+                ]
+            },
+            {
+                "steps": 10000253,
+                "file_path": "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-10000253.onnx",
+                "reward": 4.544000148773193,
+                "creation_time": 1715832857.611279,
+                "auxillary_file_paths": [
+                    "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-10000253.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 10000253,
+            "file_path": "results\\Experiment_3\\AttackerBehavior.onnx",
+            "reward": 4.544000148773193,
+            "creation_time": 1715832857.611279,
+            "auxillary_file_paths": [
+                "results\\Experiment_3\\AttackerBehavior\\AttackerBehavior-10000253.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cpu"
+    }
+}

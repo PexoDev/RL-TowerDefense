@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Forest_Mages
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: bd62cd87123319c4db3c98cb97ae5470, type: 3}
-  Range: 3.5
+  Range: 2.5
   Damage: 1
-  CooldownFrames: 20
-  Cost: 40
+  CooldownFrames: 10
+  Cost: 25
   Type: 1
   Element: 2

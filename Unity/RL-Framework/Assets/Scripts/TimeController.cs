@@ -1,55 +1,44 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 using System.Collections;
+using UnityEngine;
 
-public class TimeController : MonoBehaviour
+namespace Assets.Scripts
 {
-    public static TimeController Instance { get; private set; }
-    public event Action<FramesUpdate> OnNextFrame;
-
-    private const int FrameRate = 60;
-    private float timePerFrame;
-    public float customTimeScale = 1.0f;
-
-    public float CustomTimeScale
+    public class TimeController : MonoBehaviour
     {
-        get => customTimeScale;
-        set => customTimeScale = Mathf.Clamp(value, 0.1f, 10.0f);
-    }
+        public static TimeController Instance { get; private set; }
+        public event Action<FramesUpdate> OnNextFrame;
 
-    private void Awake()
-    {
-        if (Instance == null)
+        public int FramesPerUpdate = 1;
+        public float CustomTimeScale = 1.0f;
+
+        private const int FrameRate = 60;
+        private float _timePerFrame;
+
+        private void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+
+            _timePerFrame = 1f / FrameRate;
+            Debug.Log($"Time per frame:{_timePerFrame * FramesPerUpdate / CustomTimeScale}");
+            StartCoroutine(FrameUpdater());
         }
-        else
+
+        private IEnumerator FrameUpdater()
         {
-            Destroy(gameObject);
+            while (true)
+            {
+                OnNextFrame?.Invoke(new FramesUpdate(FramesPerUpdate));
+                yield return new WaitForSeconds(_timePerFrame / CustomTimeScale);
+            }
         }
-
-        timePerFrame = 1f / FrameRate;
-        Debug.Log($"Time per frame:{timePerFrame/customTimeScale}");
-        StartCoroutine(FrameUpdater());
-    }
-
-    IEnumerator FrameUpdater()
-    {
-        while (true)
-        {
-            OnNextFrame?.Invoke(new FramesUpdate(1));
-            yield return new WaitForSeconds(timePerFrame / customTimeScale);
-        }
-    }
-
-    public void IncreaseSpeed()
-    {
-        CustomTimeScale *= 2;
-    }
-
-    public void DecreaseSpeed()
-    {
-        CustomTimeScale /= 2;
     }
 }

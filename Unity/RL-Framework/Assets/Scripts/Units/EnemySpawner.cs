@@ -1,114 +1,104 @@
 using System;
 using System.Collections.Generic;
-using Assets.Scripts;
-using Assets.Scripts.Units;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+namespace Assets.Scripts.Units
 {
-    public GameController GameController;
-    public int WaveNumber { get; private set; } = 0;
-    public Wave[] WavesEnemies;
-    public const int Waves = 5;
-    public const int WaveMaxFrames = 60 * 30;
-    private int _waveFrames = 0;
-    private const int FramesBetweenEnemies = 5;
-    private int framesSinceLastSpawn = 0;
-    private bool readyToSpawn = true;
-    public readonly Queue<Unit> BuildQueue = new();
-    public readonly List<Unit> ActiveUnits = new();
-    public GameObject UnitPrefab { get; set; }
-
-    void OnEnable()
+    public class EnemySpawner : MonoBehaviour
     {
-        TimeController.Instance.OnNextFrame += UpdateQueue;
-    }
+        public GameController GameController { get; set; }
+        public GameObject UnitPrefab { get; set; }
+        public Wave[] WavesEnemies { get; set; }
+        public bool SpawnPresetWaves { get; set; } = false;
+        public const int WaveMaxFrames = 60 * 30;
+        public const int Waves = 2;
+        private const int FramesBetweenEnemies = 5;
 
-    void OnDisable()
-    {
-        TimeController.Instance.OnNextFrame -= UpdateQueue;
-    }
+        public event Action<Unit, bool> OnUnitDeath = (unit, reachedCastle) => { };
+        public int WaveNumber { get; private set; }
+        public readonly Queue<Unit> BuildQueue = new();
+        public readonly List<Unit> ActiveUnits = new();
 
-    private void UpdateQueue(FramesUpdate framesUpdate)
-    {
-        _waveFrames += framesUpdate.FrameCount;
-        framesSinceLastSpawn += framesUpdate.FrameCount;
-        if (!readyToSpawn && framesSinceLastSpawn >= FramesBetweenEnemies)
+        private bool _readyToSpawn = true;
+        private int _framesSinceLastSpawn;
+        private int _waveFrames;
+
+        private void OnEnable()
         {
-            framesSinceLastSpawn -= FramesBetweenEnemies;
-            readyToSpawn = true;
+            TimeController.Instance.OnNextFrame += UpdateQueue;
         }
 
-        if (!readyToSpawn || BuildQueue.Count <= 0) return;
-        if (!(framesSinceLastSpawn >= BuildQueue.Peek().Data.BuildTime)) return;
-
-        Unit enemyToSpawn = BuildQueue.Dequeue();
-        enemyToSpawn.GameController = GameController;
-        enemyToSpawn.gameObject.SetActive(true);
-        ActiveUnits.Add(enemyToSpawn);
-        
-        enemyToSpawn.OnDeath += HandleUnitDeath;
-
-        framesSinceLastSpawn -= (int)enemyToSpawn.Data.BuildTime;
-        readyToSpawn = false;
-        
-        if ((ActiveUnits.Count < 1 && BuildQueue.Count < 1) || _waveFrames >= WaveMaxFrames)
+        private void OnDisable()
         {
-            StartWave();
+            TimeController.Instance.OnNextFrame -= UpdateQueue;
         }
 
-        UpdateQueue(new(0));
-    }
-
-    private void HandleUnitDeath(Unit u)
-    {
-        OnUnitDeath(u);
-        ActiveUnits.Remove(u);
-        if (ActiveUnits.Count == 0 && BuildQueue.Count == 0)
+        public void QueueEnemy(UnitData unitData)
         {
-            StartWave();
-        }
-    }
-
-    public void QueueEnemy(UnitData unitData)
-    {
-        var newEnemy = Instantiate(UnitPrefab, transform.position, Quaternion.identity, transform);
-        newEnemy.gameObject.SetActive(false);
-        var unit = newEnemy.GetComponent<Unit>();
-        unit.Data = unitData;
-        BuildQueue.Enqueue(unit);
-    }
-
-    public void StartWave()
-    {
-        _waveFrames = 0;
-
-        if (WaveNumber >= Waves)
-        {
-            GameController.GameOver(true);
-            return;
+            var newEnemy = Instantiate(UnitPrefab, transform.position, Quaternion.identity, transform);
+            newEnemy.gameObject.SetActive(false);
+            var unit = newEnemy.GetComponent<Unit>();
+            unit.Data = unitData;
+            BuildQueue.Enqueue(unit);
         }
 
-        foreach (var unitData in WavesEnemies[WaveNumber].Units())
+        public void StartWave()
         {
-            QueueEnemy(unitData);
+            _waveFrames = 0;
+
+            if (WaveNumber >= Waves)
+            {
+                GameController.GameOver(true);
+                return;
+            }
+
+            
+            if(SpawnPresetWaves)
+                foreach (var unitData in WavesEnemies[WaveNumber].Units())
+                    QueueEnemy(unitData);
+
+            WaveNumber++;
+            GameController.NextWave(WaveNumber, _waveFrames);
         }
 
-        WaveNumber++;
-        GameController.NextWave(WaveNumber);
-    }
+        private void UpdateQueue(FramesUpdate framesUpdate)
+        {
+            _waveFrames += framesUpdate.FrameCount;
+            _framesSinceLastSpawn += framesUpdate.FrameCount;
+            if (!_readyToSpawn && _framesSinceLastSpawn >= FramesBetweenEnemies)
+            {
+                _framesSinceLastSpawn -= FramesBetweenEnemies;
+                _readyToSpawn = true;
+            }
 
-    public event Action<Unit> OnUnitDeath = unit => {};
+            if (!_readyToSpawn || BuildQueue.Count <= 0) return;
+            if (!(_framesSinceLastSpawn >= BuildQueue.Peek().Data.BuildTime)) return;
 
-    public void Reset()
-    {
-        WaveNumber = 0;
-        foreach (var unit in ActiveUnits)
-            DestroyImmediate(unit.gameObject);
-        BuildQueue.Clear();
-        ActiveUnits.Clear();
+            SpawnUnit();
 
-        framesSinceLastSpawn = 0;
-        readyToSpawn = true;
+            if (_waveFrames >= WaveMaxFrames)
+                StartWave();
+        }
+
+        private void SpawnUnit()
+        {
+            Unit enemyToSpawn = BuildQueue.Dequeue();
+            enemyToSpawn.GameController = GameController;
+            enemyToSpawn.gameObject.SetActive(true);
+            ActiveUnits.Add(enemyToSpawn);
+
+            enemyToSpawn.OnDeath += HandleUnitDeath;
+
+            _framesSinceLastSpawn = 0;
+            _readyToSpawn = false;
+        }
+
+        private void HandleUnitDeath(Unit u, bool reachedCastle)
+        {
+            OnUnitDeath(u, reachedCastle);
+            ActiveUnits.Remove(u);
+            if (ActiveUnits.Count < 1 && BuildQueue.Count < 1)
+                StartWave();
+        }
     }
 }

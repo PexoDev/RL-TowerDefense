@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Ice_Cannon
   m_EditorClassIdentifier: 
   Sprite: {fileID: 21300000, guid: f0818a818383a544cbf1ee5f425afda2, type: 3}
-  Range: 3.5
+  Range: 2.5
   Damage: 100
-  CooldownFrames: 120
+  CooldownFrames: 60
   Cost: 100
   Type: 2
   Element: 1

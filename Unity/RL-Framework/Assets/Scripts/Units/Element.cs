@@ -1,6 +1,9 @@
-﻿public enum Element
+﻿namespace Assets.Scripts.Units
 {
-    Fire,
-    Ice,
-    Forest
+    public enum Element
+    {
+        Fire,
+        Ice,
+        Forest
+    }
 }

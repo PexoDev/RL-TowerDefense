@@ -1,6 +1,9 @@
-﻿public enum UnitType
+﻿namespace Assets.Scripts.Units
 {
-    Goblin,
-    Orc,
-    Troll
+    public enum UnitType
+    {
+        Goblin,
+        Orc,
+        Troll
+    }
 }
